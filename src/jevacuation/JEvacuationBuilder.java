@@ -58,15 +58,21 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 			grid.moveTo(obj, (int)pt.getX(),(int)pt.getY());
 		}
 		
-		int humanCount = 50;
-		for(int i=0;i<humanCount;i++){
-			context.add(new Human(space,grid));
+		int humanCount = 20;
+		for(int i=0; i<humanCount; i++) {
+			Human human = new Human(space, grid);
+			context.add(human);
+			NdPoint pt = space.getLocation(human);
+			while(grid.getObjectAt((int) pt.getX(), (int) pt.getY()) != null) {
+				context.remove(human);
+				context.add(human);
+				pt = space.getLocation(human);
+			}
+			grid.moveTo(human, (int) pt.getX(), (int) pt.getY());
+			
+			
 		}
 		
-		int guideCount = 10;
-		for(int i=0; i<guideCount; i++) {
-			context.add(new Guide(space, grid, new ArrayList<Waypoint>()));
-		}
 		return context;
 	}
 	
