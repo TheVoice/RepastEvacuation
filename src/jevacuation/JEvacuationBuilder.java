@@ -73,6 +73,19 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 			
 		}
 		
+		int followerCount = 10;
+		for(int i=0; i<followerCount; i++) {
+			Follower foll = new Follower(space, grid);
+			context.add(foll);
+			NdPoint pt = space.getLocation(foll);
+			while(grid.getObjectAt((int) pt.getX(), (int) pt.getY()) != null) {
+				context.remove(foll);
+				context.add(foll);
+				pt = space.getLocation(foll);
+			}
+			grid.moveTo(foll, (int) pt.getX(), (int) pt.getY());
+		}
+		
 		return context;
 	}
 	
