@@ -11,12 +11,12 @@
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
-      <string>jevacuation.Waypoint</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+      <string>jevacuation.Follower</string>
+      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
     </entry>
     <entry>
-      <string>jevacuation.Human</string>
-      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+      <string>jevacuation.Waypoint</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
       <string>jevacuation.Exit</string>
@@ -37,10 +37,6 @@
       <string>jevacuation.Waypoint.style_0.xml</string>
     </entry>
     <entry>
-      <string>jevacuation.Human</string>
-      <null/>
-    </entry>
-    <entry>
       <string>jevacuation.Exit</string>
       <string>jevacuation.Exit.style_0.xml</string>
     </entry>
@@ -55,7 +51,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-2053636771</hashCode>
+    <hashCode>-1928950691</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -63,19 +59,19 @@
   <layerOrder>
     <entry>
       <string>jevacuation.Wall</string>
-      <int>2</int>
+      <int>3</int>
     </entry>
     <entry>
       <string>jevacuation.Guide</string>
-      <int>1</int>
+      <int>2</int>
     </entry>
     <entry>
-      <string>jevacuation.Waypoint</string>
+      <string>jevacuation.Follower</string>
       <int>0</int>
     </entry>
     <entry>
-      <string>jevacuation.Human</string>
-      <int>3</int>
+      <string>jevacuation.Waypoint</string>
+      <int>1</int>
     </entry>
     <entry>
       <string>jevacuation.Exit</string>

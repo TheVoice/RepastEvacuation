@@ -1,5 +1,7 @@
 package jevacuation;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -50,7 +52,8 @@ public class Follower {
 		
 		if(space.getDistance(space.getLocation(this), space.getLocation(exit))<space.getDistance(space.getLocation(this), space.getLocation(guide))){
 			for(GridCell <Object> cell : gridCells) {
-				if (cell.size()==0 && grid.getDistance(cell.getPoint(), grid.getLocation(exit)) < distance) {
+				if (cell.size()==0 && grid.getDistance(cell.getPoint(), grid.getLocation(exit)) < distance
+						&& !isWallOnWayTo(grid.getLocation(exit))) {
 					smallestDistancePoint = cell.getPoint();
 					distance = grid.getDistance(cell.getPoint(), grid.getLocation(exit));
 				}
@@ -59,7 +62,8 @@ public class Follower {
 				moveTowards(smallestDistancePoint);
 		}else{
 			for(GridCell <Object> cell : gridCells) {
-				if (cell.size()==0 && grid.getDistance(cell.getPoint(), grid.getLocation(guide)) < distance) {
+				if (cell.size()==0 && grid.getDistance(cell.getPoint(), grid.getLocation(guide)) < distance
+						&& !isWallOnWayTo(grid.getLocation(guide))) {
 					smallestDistancePoint = cell.getPoint();
 					distance = grid.getDistance(cell.getPoint(), grid.getLocation(guide));
 				}
@@ -69,6 +73,21 @@ public class Follower {
 		}
 	}
 	
+	private boolean isWallOnWayTo(GridPoint point) {
+		int xSource = grid.getLocation(this).getX();
+		int ySource = grid.getLocation(this).getY();
+		
+		List<Point> line = findLine(xSource, ySource, point.getX(), point.getY());
+		for(Point p : line) {
+			for(Object obj : grid.getObjectsAt(p.x, p.y)) {
+				if(obj instanceof Wall) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public void moveTowards (GridPoint pt) {
 		NdPoint myPoint = space.getLocation(this);
 		NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY());
@@ -76,6 +95,37 @@ public class Follower {
 		space.moveByVector(this, 1, angle, 0);
 		myPoint = space.getLocation(this);
 		grid.moveTo(this, (int) (myPoint.getX()+0.5), (int) (myPoint.getY()+0.5));
+		
+	}
+	//http://www.sanfoundry.com/java-program-bresenham-line-algorithm/
+	private List<Point> findLine(int x0, int y0, int x1, int y1) {
+		List<Point> line = new ArrayList<>();
+		int dx = Math.abs(x1-x0);
+		int dy = Math.abs(y1-y0);
+		
+		int sx = x0<x1 ? 1 : -1;
+		int sy = y0 < y1 ? 1: -1;
+		int err = dx-dy;
+		int e2;
+		
+		while(true) {
+			line.add(new Point(x0, y0));
+			if(x0==x1 && y0==y1) {
+				break;
+			}
+			
+			e2=2*err;
+			if(e2 > -dy) {
+				err -= dy;
+				x0+=sx;
+			}
+			
+			if(e2<dx) {
+				err += dx;
+				y0+=sy;
+			}
+		}
+		return line;
 		
 	}
 }
