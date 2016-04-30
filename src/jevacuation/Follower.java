@@ -7,11 +7,13 @@ import java.util.List;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
+import repast.simphony.space.SpatialException;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 
 public class Follower {
 	private ContinuousSpace<Object> space;
@@ -72,14 +74,31 @@ public class Follower {
 				}
 			}
 		}
-		if(smallestDistancePoint != null)
-			moveTowards(smallestDistancePoint);
-		else if(guideLastPosition!=null) {
-			moveTowards(guideLastPosition);
+		
+		//check if agent is close enough to exit
+		GridCellNgh<Object> nghCreator2 = new GridCellNgh<Object>(grid, pt, Object.class, 1, 1);
+		List<GridCell<Object>> gridCells2 = nghCreator.getNeighborhood(true);
+		for(GridCell<Object> cell : gridCells2) {
+			if(grid.getLocation(exit).equals(cell.getPoint())) {
+				ContextUtils.getContext(this).remove(this);
+				return;
+			}
 		}
-		else {
-			//random walk?
+		
+		
+		try {
+			if(smallestDistancePoint != null)
+				moveTowards(smallestDistancePoint);
+			else if(guideLastPosition!=null) {
+				moveTowards(guideLastPosition);
+			}
+			else {
+				//random walk?
+			}
+		} catch(SpatialException exp) {
+			ContextUtils.getContext(this).remove(this);
 		}
+		
 	}
 
 	private boolean isWallOnWayTo(GridPoint point) {

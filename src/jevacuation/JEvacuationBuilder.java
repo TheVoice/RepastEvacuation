@@ -44,7 +44,6 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 		
 		try {
 			readMap(context, "misc/map1.txt");
-			prepareWaypoints(context);
 			prepareGuides(context);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -102,21 +101,30 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 		
 		for(String line : lines.subList(2, lines.size())) {
 			for(int i=0; i<WIDTH; i++) {
-				if(line.charAt(i)=='1') {
-					Wall wall = new Wall(space, grid);
-					context.add(wall);
-					space.moveTo(wall, i, height);
-					NdPoint pt = space.getLocation(wall);
-					grid.moveTo(wall, (int) (pt.getX()+0.5), (int) (pt.getY()+0.5));
+				switch (line.charAt(i)) {
+					case '0': //normal, empty field
+						break;
+					case '1': {
+						Wall wall = new Wall(space, grid);
+						context.add(wall);
+						space.moveTo(wall, i, height);
+						NdPoint pt = space.getLocation(wall);
+						grid.moveTo(wall, (int) (pt.getX()+0.5), (int) (pt.getY()+0.5));
+						break;
+					}
+					case 'X': { //todo - only one exit!
+						exit = new Exit(space, grid);
+						context.add(exit);
+						space.moveTo(exit, i, height);
+						NdPoint pt = space.getLocation(exit);
+						grid.moveTo(exit, (int) (pt.getX()+0.5), (int) (pt.getY()+0.5));
+					}
+					default:
+						String waypointId = String.valueOf(line.charAt(i));
+						Waypoint waypoint = new Waypoint(context, space, grid, i, height);
+						mapWaypoints.put(waypointId, waypoint);
+						
 				}
-				if(line.charAt(i)=='2') {
-					exit = new Exit(space, grid);
-					context.add(exit);
-					space.moveTo(exit, i, height);
-					NdPoint pt = space.getLocation(exit);
-					grid.moveTo(exit, (int) (pt.getX()+0.5), (int) (pt.getY()+0.5));
-				}
-				
 			}
 			height--;
 		}
