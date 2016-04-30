@@ -16,6 +16,7 @@ import repast.simphony.space.grid.GridPoint;
 public class Follower {
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
+	private GridPoint guideLastPosition;
 	
 	public Follower(ContinuousSpace<Object> space, Grid<Object> grid) {
 		this.space = space;
@@ -50,6 +51,10 @@ public class Follower {
 		GridPoint smallestDistancePoint = null ;
 		double distance = Integer.MAX_VALUE;
 		
+		if(guide != null && !isWallOnWayTo(grid.getLocation(guide))) {
+			guideLastPosition = grid.getLocation(guide);
+		}
+		
 		if(space.getDistance(space.getLocation(this), space.getLocation(exit))<space.getDistance(space.getLocation(this), space.getLocation(guide))){
 			for(GridCell <Object> cell : gridCells) {
 				if (cell.size()==0 && grid.getDistance(cell.getPoint(), grid.getLocation(exit)) < distance
@@ -58,8 +63,6 @@ public class Follower {
 					distance = grid.getDistance(cell.getPoint(), grid.getLocation(exit));
 				}
 			}
-			if(smallestDistancePoint != null)
-				moveTowards(smallestDistancePoint);
 		}else{
 			for(GridCell <Object> cell : gridCells) {
 				if (cell.size()==0 && grid.getDistance(cell.getPoint(), grid.getLocation(guide)) < distance
@@ -68,11 +71,17 @@ public class Follower {
 					distance = grid.getDistance(cell.getPoint(), grid.getLocation(guide));
 				}
 			}
-			if(smallestDistancePoint != null)
-				moveTowards(smallestDistancePoint);
+		}
+		if(smallestDistancePoint != null)
+			moveTowards(smallestDistancePoint);
+		else if(guideLastPosition!=null) {
+			moveTowards(guideLastPosition);
+		}
+		else {
+			//random walk?
 		}
 	}
-	
+
 	private boolean isWallOnWayTo(GridPoint point) {
 		int xSource = grid.getLocation(this).getX();
 		int ySource = grid.getLocation(this).getY();
