@@ -14,6 +14,8 @@ import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
 import repast.simphony.context.space.grid.GridFactory;
 import repast.simphony.context.space.grid.GridFactoryFinder;
 import repast.simphony.dataLoader.ContextBuilder;
+import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.parameter.Parameters;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.continuous.RandomCartesianAdder;
@@ -41,10 +43,11 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 //		
 //		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
 //		Grid<Object> grid = gridFactory.createGrid("grid", context, new GridBuilderParameters<Object>(new repast.simphony.space.grid.StrictBorders(),new SimpleGridAdder<Object>(),true,50,50));
-		
+		Parameters parameters = RunEnvironment.getInstance().getParameters();
+		String mapName = parameters.getValueAsString("map");
 		try {
-			readMap(context, "misc/map1.txt");
-			prepareGuides(context);
+			readMap(context, mapName);
+			prepareGuides(context, mapName+"_guides");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,7 +75,7 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 			
 		}
 		
-		int followerCount = 10;
+		int followerCount = (int) parameters.getValue("followerCount");
 		for(int i=0; i<followerCount; i++) {
 			Follower foll = new Follower(space, grid);
 			context.add(foll);
@@ -131,19 +134,8 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 		
 	}
 	
-	private void prepareWaypoints(Context<Object> context) throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("misc/waypoint1.txt"));
-		for(String line : lines) {
-			String[] parts = line.split(",");
-			int x = Integer.parseInt(parts[1]);
-			int y = Integer.parseInt(parts[2]);
-			Waypoint waypoint = new Waypoint(context, space, grid, x, y);
-			mapWaypoints.put(parts[0], waypoint);
-		}
-	}
-	
-	private void prepareGuides(Context<Object> context) throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("misc/guides1.txt"));
+	private void prepareGuides(Context<Object> context, String guideMapName) throws IOException {
+		List<String> lines = Files.readAllLines(Paths.get(guideMapName));
 		int SIZE = Integer.parseInt(lines.get(0));
 		for(int i=1; i<=SIZE; i++) {
 			String[] parts = lines.get(2*i-1).split(",");

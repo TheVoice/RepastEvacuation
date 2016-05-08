@@ -10,14 +10,8 @@
 						defaultValue="misc/map1" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter"
-									values="misc/map1 misc/map2 misc/map3 "
+									values="misc/map1 misc/map2 "
 						
-		/>
-				<parameter name="followerCount" displayName="Follower count" type="int" 
-						defaultValue="10" 
-						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-									
 		/>
 		</parameters>
 
