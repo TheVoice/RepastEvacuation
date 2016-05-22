@@ -54,7 +54,8 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 		
 //		context.add(new Exit(space,grid));
 //		context.add(new Exit(space,grid));
-		
+		//znaki (dwa typy: strza³ka, mapa), poprawiæ klinowanie followerów, (random walk), ogieñ
+		//porównanie wersji ze strza³kami i followerami w sprawozdaniu
 		for(Object obj : context){
 			NdPoint pt = space.getLocation(obj);
 			grid.moveTo(obj, (int)pt.getX(),(int)pt.getY());
