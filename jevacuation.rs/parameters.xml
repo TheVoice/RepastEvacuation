@@ -7,10 +7,10 @@
 									
 		/>
 				<parameter name="map" displayName="Map ID" type="java.lang.String" 
-						defaultValue="misc/map1" 
+						defaultValue="misc/map1_arrows" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter"
-									values="misc/map1 misc/map2 misc/map3 "
+									values="misc/map1 misc/map2 misc/map3 misc/map1_arrows "
 						
 		/>
 				<parameter name="followerCount" displayName="Follower count" type="int" 

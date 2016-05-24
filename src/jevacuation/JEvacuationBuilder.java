@@ -16,6 +16,7 @@ import repast.simphony.context.space.grid.GridFactoryFinder;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
+import repast.simphony.space.Direction;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.continuous.RandomCartesianAdder;
@@ -54,8 +55,8 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 		
 //		context.add(new Exit(space,grid));
 //		context.add(new Exit(space,grid));
-		//znaki (dwa typy: strza³ka, mapa), poprawiæ klinowanie followerów, (random walk), ogieñ
-		//porównanie wersji ze strza³kami i followerami w sprawozdaniu
+		//znaki (dwa typy: strzaï¿½ka, mapa), poprawiï¿½ klinowanie followerï¿½w, (random walk), ogieï¿½
+		//porï¿½wnanie wersji ze strzaï¿½kami i followerami w sprawozdaniu
 		for(Object obj : context){
 			NdPoint pt = space.getLocation(obj);
 			grid.moveTo(obj, (int)pt.getX(),(int)pt.getY());
@@ -77,8 +78,21 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 		}
 		
 		int followerCount = (int) parameters.getValue("followerCount");
+//		for(int i=0; i<followerCount; i++) {
+//			Follower foll = new Follower(space, grid);
+//			context.add(foll);
+//			NdPoint pt = space.getLocation(foll);
+//			while(grid.getObjectAt((int) pt.getX(), (int) pt.getY()) != null) {
+//				context.remove(foll);
+//				context.add(foll);
+//				pt = space.getLocation(foll);
+//			}
+//			grid.moveTo(foll, (int) pt.getX(), (int) pt.getY());
+//		}
+		
+		int arrowFollowerCount = (int) parameters.getValue("followerCount");
 		for(int i=0; i<followerCount; i++) {
-			Follower foll = new Follower(space, grid);
+			ArrowFollower foll = new ArrowFollower(space, grid);
 			context.add(foll);
 			NdPoint pt = space.getLocation(foll);
 			while(grid.getObjectAt((int) pt.getX(), (int) pt.getY()) != null) {
@@ -118,7 +132,28 @@ public class JEvacuationBuilder implements ContextBuilder<Object> {
 						grid.moveTo(wall, (int) (pt.getX()+0.5), (int) (pt.getY()+0.5));
 						break;
 					}
+					case '^': {
+						Arrow arrow = new Arrow(context, space, grid, i, height, Direction.NORTH);
+						break;
+					}
+					case '>':{
+						Arrow arrow = new Arrow(context, space, grid, i, height, Direction.EAST);
+						break;
+					}
+					case '<':{
+						Arrow arrow = new Arrow(context, space, grid, i, height, Direction.WEST);
+						break;
+					}
+					case 'v': {
+						Arrow arrow = new Arrow(context, space, grid, i, height, Direction.SOUTH);
+						break;
+					}
+					case '*': { //come here sign
+						ComeHereSign comeHereSign = new ComeHereSign(context, space, grid, i, height);
+						break;
+					}
 					case 'X': { //todo - only one exit!
+						ComeHereSign comeHereSign = new ComeHereSign(context, space, grid, i, height);
 						exit = new Exit(space, grid);
 						context.add(exit);
 						space.moveTo(exit, i, height);
